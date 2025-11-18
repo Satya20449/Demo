@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Travel Blocks — Premium</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root{--accent:#ff6b35;--dark:#1a1a2e;--light:#f0f4f8;--card-bg:#fff;--success:#28a745;--gradient1:#667eea;--gradient2:#764ba2}
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{font-family:'Poppins',sans-serif;background:linear-gradient(135deg,#0f0f1e,#1a1a3e);min-height:100vh;padding:20px;position:relative;overflow-x:hidden}
+    body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at 20% 50%,rgba(102,126,234,0.1),transparent 50%),radial-gradient(circle at 80% 80%,rgba(118,75,162,0.1),transparent 50%);pointer-events:none;z-index:-1}
+    .header{text-align:center;margin-bottom:50px;animation:slideDown .8s cubic-bezier(0.34,1.56,0.64,1)}
+    .header h1{font-size:56px;background:linear-gradient(135deg,#667eea,#764ba2,#f093fb);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:12px;letter-spacing:-2px;font-weight:700;text-shadow:0 10px 30px rgba(102,126,234,0.2)}
+    .header p{color:#a0a0b0;font-size:16px;letter-spacing:0.5px}
+    .search-bar{max-width:700px;margin:30px auto;display:flex;gap:12px;animation:fadeInUp .8s ease-out .2s both}
+    .search-bar input{flex:1;padding:14px 20px;border:2px solid rgba(255,255,255,0.1);border-radius:15px;font-size:14px;background:rgba(255,255,255,0.05);backdrop-filter:blur(10px);color:#fff;transition:all .4s cubic-bezier(0.25,0.46,0.45,0.94)}
+    .search-bar input::placeholder{color:rgba(255,255,255,0.4)}
+    .search-bar input:focus{outline:none;border-color:var(--accent);background:rgba(255,255,255,0.1);box-shadow:0 0 30px rgba(255,107,53,.3),inset 0 0 20px rgba(255,107,53,.1)}
+    .search-bar button{background:linear-gradient(135deg,var(--accent),#ff8c42);color:#fff;border:none;padding:14px 28px;border-radius:15px;cursor:pointer;font-weight:700;transition:all .3s;box-shadow:0 8px 25px rgba(255,107,53,.3);text-transform:uppercase;letter-spacing:1px;font-size:13px}
+    .search-bar button:hover{transform:translateY(-3px);box-shadow:0 12px 35px rgba(255,107,53,.4)}
+    .search-bar button:active{transform:translateY(-1px)}
+    .filters{display:flex;gap:12px;margin-bottom:40px;justify-content:center;flex-wrap:wrap;animation:fadeInUp .8s ease-out .4s both}
+    .filter-btn{padding:12px 22px;border:2px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.05);border-radius:25px;cursor:pointer;transition:all .4s cubic-bezier(0.25,0.46,0.45,0.94);font-weight:600;font-size:14px;color:#fff;backdrop-filter:blur(10px);position:relative;overflow:hidden}
+    .filter-btn::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);transition:left .5s;z-index:-1}
+    .filter-btn:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 8px 20px rgba(255,107,53,.2)}
+    .filter-btn:hover::before{left:100%}
+    .filter-btn.active{background:linear-gradient(135deg,var(--accent),#ff8c42);border-color:var(--accent);color:#fff;box-shadow:0 8px 25px rgba(255,107,53,.4)}
+    .container{max-width:1300px;margin:0 auto}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:28px;animation:fadeIn .8s ease-in .3s both}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes slideDown{from{opacity:0;transform:translateY(-40px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+    @keyframes float{0%,100%{transform:translateY(0px)}50%{transform:translateY(-15px)}}
+    @keyframes glow{0%{box-shadow:0 0 20px rgba(255,107,53,.2)}50%{box-shadow:0 0 40px rgba(255,107,53,.4)}100%{box-shadow:0 0 20px rgba(255,107,53,.2)}}
+    .block{background:linear-gradient(135deg,rgba(255,255,255,0.1),rgba(255,255,255,0.05));border:1px solid rgba(255,255,255,0.2);border-radius:20px;overflow:hidden;backdrop-filter:blur(20px);cursor:pointer;transition:all .5s cubic-bezier(0.25,0.46,0.45,0.94);position:relative;animation:fadeInUp .8s ease-out;animation-fill-mode:both}
+    .block:nth-child(1){animation-delay:0.1s}
+    .block:nth-child(2){animation-delay:0.2s}
+    .block:nth-child(3){animation-delay:0.3s}
+    .block:nth-child(n+4){animation-delay:0.4s}
+    .block::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:linear-gradient(45deg,transparent,rgba(255,255,255,0.2),transparent);transform:rotate(45deg);animation:shimmer 3s infinite;z-index:1;pointer-events:none}
+    .block:hover{transform:translateY(-15px) scale(1.02);background:linear-gradient(135deg,rgba(255,255,255,0.15),rgba(255,255,255,0.08));border-color:rgba(255,107,53,0.5);box-shadow:0 20px 60px rgba(255,107,53,.25),0 0 40px rgba(102,126,234,.15)}
+    .block:hover::before{animation:shimmer 1.5s infinite}
+    .block-img{position:relative;height:240px;overflow:hidden;background:linear-gradient(135deg,#667eea,#764ba2);border-bottom:2px solid rgba(255,255,255,0.1)}
+    .block-img img{width:100%;height:100%;object-fit:cover;transition:all .6s cubic-bezier(0.25,0.46,0.45,0.94);filter:brightness(0.9) contrast(1.1)}
+    .block:hover .block-img img{transform:scale(1.2) rotate(3deg);filter:brightness(1.1) contrast(1.2) saturate(1.3)}
+    .block-img::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(180deg,transparent,rgba(26,26,46,0.4));pointer-events:none}
+    .rating{position:absolute;top:16px;right:16px;background:rgba(0,0,0,0.5);color:#ffd700;padding:10px 16px;border-radius:25px;font-size:13px;font-weight:700;backdrop-filter:blur(15px);border:1px solid rgba(255,215,0,0.3);box-shadow:0 8px 20px rgba(0,0,0,0.3)}
+    .badge{position:absolute;top:16px;left:16px;background:linear-gradient(135deg,var(--accent),#ff8c42);color:#fff;padding:8px 14px;border-radius:25px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;animation:pulse 2s cubic-bezier(0.4,0,0.6,1) infinite;box-shadow:0 4px 15px rgba(255,107,53,.4)}
+    @keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.08);opacity:0.8}}
+    .wishlist{position:absolute;bottom:16px;right:16px;background:rgba(255,255,255,0.9);width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:22px;transition:all .4s cubic-bezier(0.25,0.46,0.45,0.94);box-shadow:0 6px 20px rgba(0,0,0,0.2);border:2px solid rgba(255,255,255,0.5);animation:float 3s ease-in-out infinite;z-index:10}
+    .wishlist:hover{background:linear-gradient(135deg,var(--accent),#ff8c42);color:#fff;transform:scale(1.2) rotate(15deg);box-shadow:0 10px 30px rgba(255,107,53,.4)}
+    .block-content{padding:24px;position:relative;z-index:2}
+    .category{color:#ff8c42;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px;opacity:0.9}
+    .block h3{color:#fff;font-size:24px;margin-bottom:12px;font-weight:700;letter-spacing:-0.5px;background:linear-gradient(135deg,#fff,#e0e0e0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .block p{color:#b0b0c0;font-size:14px;line-height:1.8;margin-bottom:14px}
+    .info{display:flex;justify-content:space-between;font-size:13px;color:#8080a0;margin:16px 0;padding:14px 0;border-top:1px solid rgba(255,255,255,0.1);border-bottom:1px solid rgba(255,255,255,0.1)}
+    .info span{display:flex;align-items:center;gap:6px;transition:all .3s}
+    .info span:hover{color:#ff8c42;transform:translateX(3px)}
+    .price{color:#ff8c42;font-size:32px;font-weight:800;margin:16px 0;letter-spacing:-1px}
+    .old-price{color:#606080;text-decoration:line-through;font-size:14px;margin-right:10px;opacity:0.7}
+    .discount{color:#4ade80;font-size:12px;font-weight:700;background:rgba(74,222,128,0.15);padding:6px 10px;border-radius:6px;border:1px solid rgba(74,222,128,0.3)}
+    .features{display:flex;gap:10px;margin:14px 0;flex-wrap:wrap}
+    .feature-tag{background:linear-gradient(135deg,rgba(102,126,234,0.2),rgba(118,75,162,0.2));color:#a0c0ff;padding:8px 12px;border-radius:15px;font-size:12px;font-weight:600;border:1px solid rgba(102,126,234,0.3);backdrop-filter:blur(10px);transition:all .3s}
+    .feature-tag:hover{background:linear-gradient(135deg,rgba(102,126,234,0.4),rgba(118,75,162,0.4));transform:scale(1.05)}
+    .btn{background:linear-gradient(135deg,var(--accent),#ff8c42);color:#fff;border:none;padding:16px;border-radius:12px;cursor:pointer;width:100%;font-weight:700;transition:all .4s cubic-bezier(0.25,0.46,0.45,0.94);margin-top:14px;font-size:15px;box-shadow:0 6px 20px rgba(255,107,53,.3);position:relative;overflow:hidden;text-transform:uppercase;letter-spacing:1px}
+    .btn::before{content:'';position:absolute;top:50%;left:50%;width:0;height:0;background:rgba(255,255,255,0.3);border-radius:50%;transform:translate(-50%,-50%);transition:width .6s,height .6s}
+    .btn:hover::before{width:300px;height:300px}
+    .btn:hover{transform:translateY(-4px);box-shadow:0 12px 35px rgba(255,107,53,.4)}
+    .btn:active{transform:translateY(-1px)}
+    .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(8px);animation:fadeIn .3s ease}
+    .modal.show{display:flex}
+    .modal-content{background:linear-gradient(135deg,rgba(255,255,255,0.15),rgba(255,255,255,0.05));border:1px solid rgba(255,255,255,0.2);border-radius:25px;padding:45px;max-width:580px;width:95%;position:relative;box-shadow:0 25px 80px rgba(0,0,0,.5);animation:modalSlideUp .5s cubic-bezier(0.34,1.56,0.64,1);backdrop-filter:blur(30px)}
+    @keyframes modalSlideUp{from{opacity:0;transform:translateY(50px)}to{opacity:1;transform:translateY(0)}}
+    .modal-close{position:absolute;top:20px;right:20px;background:linear-gradient(135deg,rgba(255,107,53,0.3),rgba(255,140,66,0.2));border:1px solid rgba(255,107,53,0.5);font-size:28px;cursor:pointer;width:45px;height:45px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all .4s;color:#ff8c42;backdrop-filter:blur(10px)}
+    .modal-close:hover{background:linear-gradient(135deg,var(--accent),#ff8c42);color:#fff;transform:rotate(90deg) scale(1.1);box-shadow:0 8px 25px rgba(255,107,53,.4)}
+    .modal h2{margin-bottom:12px;color:#fff;font-size:32px;font-weight:800;letter-spacing:-1px}
+    .modal .modal-price{color:#ff8c42;font-size:28px;font-weight:800;margin-bottom:24px;letter-spacing:-1px}
+    .modal input,.modal textarea{width:100%;padding:14px 16px;margin:12px 0;border:1.5px solid rgba(255,255,255,0.15);border-radius:12px;font-family:inherit;font-size:14px;background:rgba(255,255,255,0.05);backdrop-filter:blur(10px);color:#fff;transition:all .4s;letter-spacing:0.5px}
+    .modal input::placeholder,.modal textarea::placeholder{color:rgba(255,255,255,0.3)}
+    .modal input:focus,.modal textarea:focus{outline:none;border-color:var(--accent);background:rgba(255,255,255,0.1);box-shadow:0 0 25px rgba(255,107,53,.3),inset 0 0 15px rgba(255,107,53,.1)}
+    .modal textarea{resize:vertical;min-height:110px}
+    .modal button{background:linear-gradient(135deg,var(--accent),#ff8c42);color:#fff;border:none;padding:16px;border-radius:12px;cursor:pointer;width:100%;font-weight:700;margin-top:24px;font-size:15px;transition:all .4s;box-shadow:0 6px 20px rgba(255,107,53,.3);text-transform:uppercase;letter-spacing:1px;position:relative;overflow:hidden}
+    .modal button::before{content:'';position:absolute;top:50%;left:50%;width:0;height:0;background:rgba(255,255,255,0.3);border-radius:50%;transform:translate(-50%,-50%);transition:width .6s,height .6s}
+    .modal button:hover::before{width:300px;height:300px}
+    .modal button:hover{transform:translateY(-3px);box-shadow:0 12px 35px rgba(255,107,53,.4)}
+    .toast{position:fixed;bottom:30px;right:30px;background:linear-gradient(135deg,var(--success),#5dd983);color:#fff;padding:18px 28px;border-radius:15px;box-shadow:0 8px 30px rgba(0,0,0,.3);display:none;animation:slideInRight .5s cubic-bezier(0.34,1.56,0.64,1);z-index:2000;font-weight:600;border:1px solid rgba(255,255,255,0.2);backdrop-filter:blur(10px);border-left:4px solid #fff}
+    .toast.show{display:block}
+    @keyframes slideInRight{from{opacity:0;transform:translateX(100px)}to{opacity:1;transform:translateX(0)}}
+    .empty-state{text-align:center;padding:80px 20px;color:#a0a0b0}
+    .empty-state h3{font-size:28px;color:#fff;margin-bottom:12px;font-weight:700}
+    @media (max-width:768px){
+      .grid{grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px}
+      .header h1{font-size:36px}
+      .search-bar{flex-direction:column}
+      .modal-content{padding:28px}
+      .block-img{height:180px}
+      .filters{gap:8px}
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>✈️ Premium Travel Blocks</h1>
+    <p>Discover your next adventure</p>
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search destinations...">
+      <button onclick="searchDestinations()">Search</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="filters">
+      <button class="filter-btn active" onclick="filterBlocks('all')">All</button>
+      <button class="filter-btn" onclick="filterBlocks('asia')">🌏 Asia</button>
+      <button class="filter-btn" onclick="filterBlocks('europe')">🏰 Europe</button>
+      <button class="filter-btn" onclick="filterBlocks('americas')">🗽 Americas</button>
+    </div>
+
+    <div class="grid" id="blocks"></div>
+    <div class="empty-state" id="emptyState" style="display:none;">
+      <h3>No destinations found</h3>
+      <p>Try adjusting your search or filters</p>
+    </div>
+  </div>
+
+  <!-- Detail Modal -->
+  <div class="modal" id="detailModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <h2 id="modalTitle"></h2>
+      <div class="modal-price" id="modalPrice"></div>
+      <p id="modalDesc" style="color:#b0b0c0;line-height:1.8;margin-bottom:24px;"></p>
+      <div style="background:rgba(102,126,234,0.1);padding:18px;border-radius:12px;margin-bottom:24px;border:1px solid rgba(102,126,234,0.2)">
+        <p style="color:#a0c0ff;margin-bottom:8px"><strong>📍 Duration:</strong> <span id="modalDuration"></span></p>
+        <p style="color:#a0c0ff"><strong>⭐ Rating:</strong> <span id="modalRating"></span></p>
+      </div>
+      <input type="text" id="email" placeholder="Your email" required>
+      <input type="text" id="name" placeholder="Your full name" required>
+      <input type="date" id="travelDate" required>
+      <textarea id="message" placeholder="Special requests or notes"></textarea>
+      <button onclick="bookNow()">🎫 Confirm Booking</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const destinations = [
+      {id:1,name:'Paris',category:'europe',desc:'Experience the Eiffel Tower and romantic Seine River walks',fullDesc:'Explore museums, cafes, and iconic landmarks of the City of Light',price:1200,oldPrice:1500,rating:4.8,duration:'5 days',features:['Museums','Dining','Romance'],img:'https://images.pexels.com/photos/338515/pexels-photo-338515.jpeg?auto=compress&cs=tinysrgb&w=600&h=500'},
+      {id:2,name:'Tokyo',category:'asia',desc:'Modern skyscrapers meet ancient temples in Japan',fullDesc:'Experience neon streets, temples, and cutting-edge technology',price:1500,oldPrice:1800,rating:4.9,duration:'6 days',features:['Culture','Tech','Food'],img:'https://images.pexels.com/photos/2536965/pexels-photo-2536965.jpeg?auto=compress&cs=tinysrgb&w=600&h=500'},
+      {id:3,name:'Dubai',category:'asia',desc:'Luxury shopping and desert adventures await',fullDesc:'Burj Khalifa, Palm Jumeirah, and world-class resorts',price:1800,oldPrice:2200,rating:4.7,duration:'4 days',features:['Luxury','Shopping','Desert'],img:'https://images.pexels.com/photos/3721941/pexels-photo-3721941.jpeg?auto=compress&cs=tinysrgb&w=600&h=500'},
+      {id:4,name:'New York',category:'americas',desc:'The city that never sleeps and always amazes',fullDesc:'Times Square, Central Park, Broadway shows, and world cuisine',price:1100,oldPrice:1400,rating:4.6,duration:'5 days',features:['Nightlife','Theater','Parks'],img:'https://images.pexels.com/photos/393047/pexels-photo-393047.jpeg?auto=compress&cs=tinysrgb&w=600&h=500'},
+      {id:5,name:'Bali',category:'asia',desc:'Tropical paradise with temples and beaches',fullDesc:'Rice fields, temples, pristine beaches, and vibrant culture',price:900,oldPrice:1200,rating:4.8,duration:'7 days',features:['Beaches','Temples','Nature'],img:'https://images.pexels.com/photos/1537225228614-b4fad34a0b60?auto=compress&cs=tinysrgb&w=600&h=500'},
+      {id:6,name:'London',category:'europe',desc:'Royal heritage meets modern innovation',fullDesc:'Big Ben, Tower of London, museums, and traditional afternoon tea',price:1300,oldPrice:1600,rating:4.7,duration:'5 days',features:['History','Museums','Tea'],img:'https://images.pexels.com/photos/460672/pexels-photo-460672.jpeg?auto=compress&cs=tinysrgb&w=600&h=500'},
+      {id:7,name:'Barcelona',category:'europe',desc:'Gaudí architecture and Mediterranean beauty',fullDesc:'Sagrada Familia, Park Güell, beaches, and vibrant nightlife',price:1100,oldPrice:1350,rating:4.8,duration:'4 days',features:['Architecture','Beaches','Art'],img:'https://images.pexels.com/photos/2398220/pexels-photo-2398220.jpeg?auto=compress&cs=tinysrgb&w=600&h=500'},
+      {id:8,name:'Bangkok',category:'asia',desc:'Street food and golden temples of Thailand',fullDesc:'Ancient temples, night markets, and authentic Thai cuisine',price:800,oldPrice:1100,rating:4.6,duration:'4 days',features:['Food','Temples','Markets'],img:'https://images.pexels.com/photos/1619317/pexels-photo-1619317.jpeg?auto=compress&cs=tinysrgb&w=600&h=500'},
+      {id:9,name:'Rome',category:'europe',desc:'Ancient ruins and Renaissance art treasures',fullDesc:'Colosseum, Vatican, Roman Forum, and timeless architecture',price:1050,oldPrice:1350,rating:4.9,duration:'5 days',features:['History','Art','Religion'],img:'https://images.pexels.com/photos/3803517/pexels-photo-3803517.jpeg?auto=compress&cs=tinysrgb&w=600&h=500'},
+      {id:10,name:'Singapore',category:'asia',desc:'Ultramodern city-state with Gardens by the Bay',fullDesc:'Marina Bay Sands, Gardens, shopping, and diverse culture',price:1200,oldPrice:1500,rating:4.7,duration:'3 days',features:['Modern','Shopping','Gardens'],img:'https://images.pexels.com/photos/1955134/pexels-photo-1955134.jpeg?auto=compress&cs=tinysrgb&w=600&h=500'},
+      {id:11,name:'Los Angeles',category:'americas',desc:'Beaches, Hollywood glamour, and sunshine',fullDesc:'Hollywood Sign, Santa Monica Pier, and California beaches',price:950,oldPrice:1250,rating:4.5,duration:'4 days',features:['Beaches','Entertainment','Sun'],img:'https://images.pexels.com/photos/1761279/pexels-photo-1761279.jpeg?auto=compress&cs=tinysrgb&w=600&h=500'},
+      {id:12,name:'Phuket',category:'asia',desc:'Thai beaches and tropical island living',fullDesc:'Stunning beaches, water sports, and island hopping adventures',price:750,oldPrice:1000,rating:4.6,duration:'5 days',features:['Beaches','Sports','Islands'],img:'https://images.pexels.com/photos/1631317/pexels-photo-1631317.jpeg?auto=compress&cs=tinysrgb&w=600&h=500'},
+      {id:13,name:'Berlin',category:'europe',desc:'History, art, and vibrant nightlife culture',fullDesc:'Brandenburg Gate, museums, street art, and modern clubs',price:950,oldPrice:1200,rating:4.7,duration:'4 days',features:['History','Art','Nightlife'],img:'https://images.pexels.com/photos/1261180/pexels-photo-1261180.jpeg?auto=compress&cs=tinysrgb&w=600&h=500'},
+      {id:14,name:'Venice',category:'europe',desc:'Romantic canals and historic basilicas',fullDesc:'Grand Canal, St Mark\'s, gondola rides, and Renaissance art',price:1250,oldPrice:1550,rating:4.9,duration:'3 days',features:['Romance','Canals','History'],img:'https://images.pexels.com/photos/3155666/pexels-photo-3155666.jpeg?auto=compress&cs=tinysrgb&w=600&h=500'},
+      {id:15,name:'Istanbul',category:'europe',desc:'Where East meets West on the Bosphorus',fullDesc:'Blue Mosque, Hagia Sophia, bazaars, and cultural blend',price:900,oldPrice:1150,rating:4.7,duration:'4 days',features:['Culture','Bazaars','History'],img:'https://images.pexels.com/photos/3524621/pexels-photo-3524621.jpeg?auto=compress&cs=tinysrgb&w=600&h=500'},
+      {id:16,name:'Kyoto',category:'asia',desc:'Traditional temples and geisha in ancient Japan',fullDesc:'Bamboo groves, temples, geishas, and traditional gardens',price:1400,oldPrice:1700,rating:4.8,duration:'4 days',features:['Temples','Culture','Nature'],img:'https://images.pexels.com/photos/3182812/pexels-photo-3182812.jpeg?auto=compress&cs=tinysrgb&w=600&h=500'},
+      {id:17,name:'Taj Mahal',category:'asia',desc:'The eternal symbol of love in Agra',fullDesc:'Marvel at the world\'s most beautiful monument and explore Mughal architecture',price:450,oldPrice:650,rating:4.9,duration:'3 days',features:['Monument','History','Romance'],img:'https://images.pexels.com/photos/3889857/pexels-photo-3889857.jpeg?auto=compress&cs=tinysrgb&w=600&h=500'},
+      {id:18,name:'Jaipur',category:'asia',desc:'The Pink City with palaces and forts',fullDesc:'City Palace, Hawa Mahal, and colorful bazaars of Rajasthan',price:500,oldPrice:750,rating:4.7,duration:'3 days',features:['Palace','Culture','Shopping'],img:'https://images.pexels.com/photos/2872767/pexels-photo-2872767.jpeg?auto=compress&cs=tinysrgb&w=600&h=500'},
+      {id:19,name:'Kerala Backwaters',category:'asia',desc:'Serene houseboats and lush green landscapes',fullDesc:'Peaceful backwater cruises, beaches, and tropical spice plantations',price:600,oldPrice:850,rating:4.8,duration:'4 days',features:['Nature','Backwaters','Beaches'],img:'https://images.pexels.com/photos/1882317/pexels-photo-1882317.jpeg?auto=compress&cs=tinysrgb&w=600&h=500'},
+      {id:20,name:'Varanasi',category:'asia',desc:'Spiritual and sacred city on the Ganges',fullDesc:'Ancient temples, ghats, sunrise rituals, and spiritual awakening',price:350,oldPrice:550,rating:4.6,duration:'3 days',features:['Spiritual','Temples','Culture'],img:'https://images.pexels.com/photos/1988865/pexels-photo-1988865.jpeg?auto=compress&cs=tinysrgb&w=600&h=500'},
+      {id:21,name:'Goa Beaches',category:'asia',desc:'Tropical paradise with beaches and Portuguese charm',fullDesc:'Golden beaches, water sports, nightlife, and cultural heritage',price:550,oldPrice:800,rating:4.7,duration:'4 days',features:['Beaches','Nightlife','Water Sports'],img:'https://images.pexels.com/photos/1619317/pexels-photo-1619317.jpeg?auto=compress&cs=tinysrgb&w=600&h=500'}
+    ];
+
+    let currentFilter = 'all';
+    let wishlist = [];
+
+    function renderBlocks(filter = 'all') {
+      const grid = document.getElementById('blocks');
+      const emptyState = document.getElementById('emptyState');
+      grid.innerHTML = '';
+      const filtered = filter === 'all' ? destinations : destinations.filter(d => d.category === filter);
+      
+      if (filtered.length === 0) {
+        emptyState.style.display = 'block';
+        return;
+      }
+      emptyState.style.display = 'none';
+
+      filtered.forEach(dest => {
+        const block = document.createElement('div');
+        block.className = 'block';
+        const inWishlist = wishlist.includes(dest.id);
+        const featuresHtml = dest.features.map(f => `<span class="feature-tag">${f}</span>`).join('');
+        
+        block.innerHTML = `
+          <div class="block-img">
+            <img src="${dest.img}" alt="${dest.name}">
+            <div class="badge">Featured</div>
+            <div class="rating">⭐ ${dest.rating}</div>
+          </div>
+          <div class="block-content">
+            <div class="category">${dest.category}</div>
+            <h3>${dest.name}</h3>
+            <p>${dest.desc}</p>
+            <div class="features">${featuresHtml}</div>
+            <div class="info">
+              <span>📅 ${dest.duration}</span>
+              <span>👥 Groups Welcome</span>
+            </div>
+            <div class="price">
+              <span class="old-price">$${dest.oldPrice}</span>$${dest.price}
+              <span class="discount">Save $${dest.oldPrice - dest.price}</span>
+            </div>
+            <button class="btn" onclick="openModal(${dest.id})">Book Now</button>
+          </div>
+          <div class="wishlist" onclick="toggleWishlist(${dest.id})">${inWishlist ? '❤️' : '🤍'}</div>
+        `;
+        grid.appendChild(block);
+      });
+    }
+
+    function filterBlocks(category) {
+      currentFilter = category;
+      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      renderBlocks(category);
+    }
+
+    function searchDestinations() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const grid = document.getElementById('blocks');
+      const emptyState = document.getElementById('emptyState');
+      grid.innerHTML = '';
+      
+      const filtered = destinations.filter(d => d.name.toLowerCase().includes(query));
+      
+      if (filtered.length === 0) {
+        emptyState.style.display = 'block';
+        return;
+      }
+      emptyState.style.display = 'none';
+
+      filtered.forEach(dest => {
+        const block = document.createElement('div');
+        block.className = 'block';
+        const inWishlist = wishlist.includes(dest.id);
+        const featuresHtml = dest.features.map(f => `<span class="feature-tag">${f}</span>`).join('');
+        
+        block.innerHTML = `
+          <div class="block-img">
+            <img src="${dest.img}" alt="${dest.name}">
+            <div class="badge">Featured</div>
+            <div class="rating">⭐ ${dest.rating}</div>
+          </div>
+          <div class="block-content">
+            <div class="category">${dest.category}</div>
+            <h3>${dest.name}</h3>
+            <p>${dest.desc}</p>
+            <div class="features">${featuresHtml}</div>
+            <div class="info">
+              <span>📅 ${dest.duration}</span>
+              <span>👥 Groups Welcome</span>
+            </div>
+            <div class="price">
+              <span class="old-price">$${dest.oldPrice}</span>$${dest.price}
+              <span class="discount">Save $${dest.oldPrice - dest.price}</span>
+            </div>
+            <button class="btn" onclick="openModal(${dest.id})">Book Now</button>
+          </div>
+          <div class="wishlist" onclick="toggleWishlist(${dest.id})">${inWishlist ? '❤️' : '🤍'}</div>
+        `;
+        grid.appendChild(block);
+      });
+    }
+
+    function toggleWishlist(id) {
+      const idx = wishlist.indexOf(id);
+      if (idx > -1) {
+        wishlist.splice(idx, 1);
+        showToast('Removed from wishlist');
+      } else {
+        wishlist.push(id);
+        showToast('Added to wishlist ❤️');
+      }
+      renderBlocks(currentFilter);
+    }
+
+    function openModal(id) {
+      const dest = destinations.find(d => d.id === id);
+      document.getElementById('modalTitle').textContent = dest.name;
+      document.getElementById('modalDesc').textContent = dest.fullDesc;
+      document.getElementById('modalPrice').textContent = `$${dest.price} per person`;
+      document.getElementById('modalDuration').textContent = dest.duration;
+      document.getElementById('modalRating').textContent = `${dest.rating} / 5.0`;
+      document.getElementById('detailModal').classList.add('show');
+    }
+
+    function closeModal() {
+      document.getElementById('detailModal').classList.remove('show');
+    }
+
+    function bookNow() {
+      const email = document.getElementById('email').value;
+      const name = document.getElementById('name').value;
+      const date = document.getElementById('travelDate').value;
+      
+      if (!email || !name || !date) {
+        alert('Please fill all required fields');
+        return;
+      }
+      
+      showToast('✅ Booking confirmed! Check your email');
+      closeModal();
+      document.getElementById('email').value = '';
+      document.getElementById('name').value = '';
+      document.getElementById('travelDate').value = '';
+      document.getElementById('message').value = '';
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    // Initialize
+    renderBlocks();
+  </script>
+</body>
+</html>
