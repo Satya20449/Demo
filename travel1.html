@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>WE Travels — A Unique Travel Blog</title>
+  <meta name="description" content="WanderNest — beautiful, responsive travel blog template with gallery, posts, about and contact sections. Built with HTML, CSS and vanilla JS." />
+
+  <style>
+    :root{
+      --accent: #0d6efd;
+      --dark:#0b1220;
+      --muted:#667085;
+      --card:#ffffff;
+      --glass: rgba(255,255,255,0.07);
+      --max-width:1100px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;line-height:1.45;color:var(--dark);background:linear-gradient(180deg,#f6f7fb 0%, #eef2ff 100%);}    
+
+    /* --- Page Shell --- */
+    .wrap{max-width:var(--max-width);margin:32px auto;padding:18px}
+    header.site{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--dark)}
+    .logo{width:52px;height:52px;border-radius:10px;display:grid;place-items:center;color:white;font-weight:700;background:linear-gradient(135deg,var(--accent),#7b61ff);box-shadow:0 6px 18px rgba(13,110,253,0.12)}
+    .brand h1{font-size:1.15rem;margin:0}
+    .brand p{margin:0;font-size:0.82rem;color:var(--muted)}
+
+    nav.main{display:flex;gap:10px;align-items:center}
+    nav a{padding:10px 14px;border-radius:10px;text-decoration:none;color:var(--dark);font-weight:600}
+    nav a:hover{background:var(--glass)}
+
+    .cta{background:var(--accent);color:rgb(222, 67, 206);padding:10px 14px;border-radius:10px;text-decoration:none}
+
+    /* --- Hero --- */
+    .hero{display:grid;grid-template-columns:1fr 420px;gap:24px;align-items:center;margin-top:18px}
+    .hero .intro{background:linear-gradient(180deg, rgba(255,255,255,0.8), rgba(255,255,255,0.6));padding:28px;border-radius:14px;box-shadow:0 8px 30px rgba(19,24,36,0.06)}
+    .intro h2{margin:0 0 8px;font-size:1.8rem}
+    .intro p{margin:0;color:var(--muted)}
+    .hero .searchcard{background:linear-gradient(180deg,#fff,#fafafa);padding:18px;border-radius:14px;box-shadow:0 6px 20px rgba(13,110,253,0.06)}
+    .searchcard input{width:100%;padding:12px;border:1px solid #e6e9ef;border-radius:10px;font-size:0.95rem}
+
+    /* --- Grid posts & sidebar --- */
+    .maingrid{display:grid;grid-template-columns:1fr 320px;gap:22px;margin-top:22px}
+    .posts{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+    .post{background:var(--card);border-radius:12px;overflow:hidden;box-shadow:0 8px 20px rgba(22,28,45,0.04);transition:transform .22s ease}
+    .post:hover{transform:translateY(-6px)}
+    .post .thumb{height:160px;background-size:cover;background-position:center}
+    .post .meta{padding:12px}
+    .post h3{margin:0 0 6px;font-size:1.05rem}
+    .post p{margin:0;color:var(--muted);font-size:0.92rem}
+
+    /* sidebar */
+    aside.panel{background:var(--card);padding:14px;border-radius:12px;min-height:180px}
+    .small-list{display:flex;flex-direction:column;gap:10px}
+    .tag{display:inline-block;padding:8px 12px;border-radius:999px;background:#fff;border:1px solid #f1f3f6;font-size:0.85rem}
+
+    /* gallery */
+    .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+    .gallery img{width:100%;height:110px;object-fit:cover;border-radius:8px;cursor:pointer}
+
+    /* blog post page (single) */
+    .postpage{background:var(--card);padding:18px;border-radius:12px;box-shadow:0 10px 30px rgba(16,24,40,0.04)}
+    .postpage h2{margin-top:0}
+    .postpage .heroimg{width:100%;height:340px;object-fit:cover;border-radius:10px;margin-bottom:12px}
+
+    /* contact */
+    form .row{display:flex;gap:8px}
+    input, textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #e6e9ef;font-size:0.95rem}
+    textarea{min-height:120px}
+    button.btn{background:var(--accent);color:rgb(92, 189, 233);border:none;padding:10px 16px;border-radius:10px;font-weight:700}
+
+    /* footer */
+    footer{margin-top:30px;text-align:center;color:var(--muted);font-size:0.9rem}
+
+    /* responsive */
+    @media (max-width:980px){
+      .hero{grid-template-columns:1fr}
+      .maingrid{grid-template-columns:1fr}
+      .posts{grid-template-columns:1fr}
+      .post .thumb{height:200px}
+      .gallery{grid-template-columns:repeat(3,1fr)}
+    }
+    @media (max-width:520px){
+      .brand h1{font-size:1rem}
+      nav.main{display:none}
+      header.site{gap:8px}
+      .searchcard{display:block}
+      .gallery{grid-template-columns:repeat(2,1fr)}
+    }
+
+    /* subtle animation */
+    .fade-up{opacity:0;transform:translateY(8px);animation:fadeUp .6s forwards}
+    @keyframes fadeUp{to{opacity:1;transform:none}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <!-- header -->
+    <header class="site">
+      <a class="brand" href="#home">
+        <div class="logo">WN</div>
+        <div>
+          <h1>WeTravels</h1>
+          <p>Travel stories, guides & photos</p>
+        </div>
+      </a>
+
+      <nav class="main" aria-label="Main navigation">
+        <a href="#home">Home</a>
+        <a href="#destinations">Destinations</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+        <a class="cta" href="#create-post">Create Post</a>
+      </nav>
+
+      <!-- mobile menu button -->
+      <button id="hambtn" aria-label="Open menu" style="display:none">☰</button>
+    </header>
+
+    <!-- hero -->
+    <section id="home" class="hero">
+      <div class="intro fade-up">
+        <h2>Stories that make you pack your bag.</h2>
+        <p>Mini-guides, honest reviews and photo-led travel stories from short getaways to long hauls.</p>
+        <div style="height:12px"></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <span class="tag">Budget</span>
+          <span class="tag">Backpacking</span>
+          <span class="tag">Food</span>
+          <span class="tag">Nature</span>
+        </div>
+      </div>
+
+      <aside class="searchcard fade-up">
+        <label for="search">Search posts or places</label>
+        <input id="search" placeholder="Try 'Goa', 'Manali', or 'food'" />
+        <div style="height:12px"></div>
+        <strong>Popular:</strong>
+        <div class="small-list" style="margin-top:8px">
+          <a class="tag">Goa Beaches</a>
+          <a class="tag">Taj Mahal</a>
+          <a class="tag">South India Food</a>
+        </div>
+      </aside>
+    </section>
+
+    <!-- grid -->
+    <section class="maingrid">
+      <main>
+        <div class="posts" id="posts">
+
+          <!-- sample posts (data-driven via JS below) -->
+
+        </div>
+
+        <!-- load more -->
+        <div style="margin-top:12px;display:flex;justify-content:center">
+          <button id="loadMore" class="btn">Load more posts</button>
+        </div>
+      </main>
+
+      <aside class="panel">
+        <h3>About WanderNest</h3>
+        <p class="small" style="color:var(--muted)">WanderNest is a demo travel blog project — perfect for a college mini-project. It demonstrates responsive layout, gallery modal, single post view and a contact form.</p>
+
+        <div style="height:12px"></div>
+        <h4>Quick links</h4>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <a class="tag" href="#gallery">Gallery</a>
+          <a class="tag" href="#contact">Contact</a>
+          <a class="tag" href="#about">About</a>
+        </div>
+
+        <div style="height:12px"></div>
+        <h4>Mini Gallery</h4>
+        <div class="gallery" id="miniGallery"></div>
+
+      </aside>
+    </section>
+
+    <!-- destinations / gallery anchor -->
+    <section id="destinations" style="margin-top:24px">
+      <h2>Featured Destinations</h2>
+      <div style="height:12px"></div>
+      <div class="posts" id="featured"></div>
+    </section>
+
+    <section id="gallery" style="margin-top:22px">
+      <h2>Photo Gallery</h2>
+      <div class="gallery" id="galleryGrid"></div>
+    </section>
+
+    <!-- single post area (hash routing) -->
+    <section id="postView" style="margin-top:18px;display:none"></section>
+
+    <!-- about -->
+    <section id="about" style="margin-top:22px">
+      <h2>About</h2>
+      <div class="postpage">
+        <p>Namaste🙏 We Travel is built as a single-file small website. It includes a photo gallery, post listing, single-post view, and a contact form. All components are accessible and responsive Dhanyabad🙏.</p>
+        <h3>Features implemented</h3>
+        <ul>
+          <li>Responsive layout (desktop/tablet/mobile)</li>
+          <li>Grid of posts with hover effects</li>
+          <li>Image gallery with click-to-open modal</li>
+          <li>Hash-based single-post view (no server needed)</li>
+          <li>Contact form (front-end only)</li>
+        </ul>
+      </div>
+    </section>
+    <!-- contact -->
+    <section id="contact" style="margin-top:22px">
+      <h2>Contact</h2>
+      <div class="postpage">
+        <form id="contactForm">
+          <div class="row">
+            <input required placeholder="Your name" id="name" />
+            <input required placeholder="Email" id="email" />
+          </div>
+          <div style="height:8px"></div>
+          <textarea placeholder="Message" id="message"></textarea>
+          <div style="height:12px"></div>
+          <button class="btn" type="submit">Send message</button>
+        </form>
+        <p id="formResult" style="color:green;margin-top:10px;display:none">Thanks — message shown locally (no server).</p>
+      </div>
+    </section>
+
+    <footer>
+      <p>© 2025 We Travels — Built with ❤ Web Dev</p>
+    </footer>
+  </div>
+
+  <!-- Image Modal -->
+  <div id="modal" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(8,12,20,0.6);z-index:80">
+    <div style="max-width:980px;width:94%;background:white;border-radius:10px;overflow:hidden;box-shadow:0 20px 50px rgba(2,6,23,0.6)">
+      <img id="modalImg" style="width:100%;height:520px;object-fit:cover;display:block" />
+      <div style="padding:12px;text-align:right"><button id="closeModal" class="btn">Close</button></div>
+    </div>
+  </div>
+
+  <script>
+    // --- Demo dataset --- (you can replace images with local files for project zip)
+    const POSTS = [
+      {id:'goa-escape',title:'Sunsets of Goa',excerpt:'Golden beaches, seafood shacks and the laidback vibe of Goa.',img:'https://images.unsplash.com/photo-1507525428034-b723cf961d3e'},
+      {id:'Taj Mahal',title:'Taj Mahal',excerpt:'Welcome to Taj Mahal,is famous for Own beauty and one of the wonders of the world.',img:'https://images.unsplash.com/photo-1524492412937-b28074a5d7da'},
+      {id:'kerala-backwaters',title:'Backwaters of Kerala',excerpt:'Houseboats, coconut groves and serene waterways.',img:'https://images.unsplash.com/photo-1504196606672-aef5c9cefc92'},
+      {id:'ladakh-road',title:'Road trip to Ladakh',excerpt:'High passes, blue lakes and an otherworldly landscape.',img:'https://images.unsplash.com/photo-1549880338-65ddcdfd017b'},
+      {id:'coorg-cafes',title:'Coorg — The Coffee Land',excerpt:'Coffee estates, lush hills and calm homestays.',img:'https://images.unsplash.com/photo-1501785888041-af3ef285b470'},
+      {id:'spiti-valley',title:'Quiet of Spiti',excerpt:'Remote villages and starry skies.',img:'https://images.unsplash.com/photo-1441974231531-c6227db76b6e'}
+    ];
+
+    const GALLERY = Array.from(POSTS).map((p,i)=>({src:p.img + '?auto=format&fit=crop&w=1200&q=60'}));
+
+    // render posts
+    const postsEl = document.getElementById('posts');
+    const featuredEl = document.getElementById('featured');
+    const galleryGrid = document.getElementById('galleryGrid');
+    const miniGallery = document.getElementById('miniGallery');
+    const postView = document.getElementById('postView');
+
+    function createPostCard(post){
+      const div = document.createElement('article');
+      div.className='post fade-up';
+      div.innerHTML = `\n        <div class="thumb" style="background-image:url('${post.img}?auto=format&fit=crop&w=1200&q=60')"></div>\n        <div class="meta">\n          <h3>${post.title}</h3>\n          <p>${post.excerpt}</p>\n          <div style=\"height:10px\"></div>\n          <a href=\"#post=${post.id}\" style=\"font-weight:700;color:var(--accent)\">Read more →</a>\n        </div>\n      `;
+      return div;
+    }
+
+    // initial render
+    function renderInitial(){
+      postsEl.innerHTML='';
+      featuredEl.innerHTML='';
+      POSTS.slice(0,4).forEach(p=>postsEl.appendChild(createPostCard(p)));
+      POSTS.slice(0,2).forEach(p=>featuredEl.appendChild(createPostCard(p)));
+      // gallery
+      galleryGrid.innerHTML='';
+      miniGallery.innerHTML='';
+      GALLERY.forEach((g,i)=>{
+        const img = document.createElement('img'); img.src = g.src; img.alt = 'photo '+i; img.loading='lazy';
+        img.addEventListener('click',()=>openModal(g.src));
+        galleryGrid.appendChild(img);
+        if(i<6) miniGallery.appendChild(img.cloneNode());
+      })
+    }
+
+    renderInitial();
+
+    // modal
+    const modal = document.getElementById('modal');
+    const modalImg = document.getElementById('modalImg');
+    document.getElementById('closeModal').addEventListener('click',closeModal);
+    modal.addEventListener('click',(e)=>{ if(e.target===modal) closeModal(); })
+    function openModal(src){ modalImg.src = src; modal.style.display='flex' }
+    function closeModal(){ modal.style.display='none'; modalImg.src='' }
+
+    // load more behavior (adds the rest)
+    document.getElementById('loadMore').addEventListener('click',()=>{
+      POSTS.slice(4).forEach(p=>postsEl.appendChild(createPostCard(p)));
+      document.getElementById('loadMore').style.display='none';
+    })
+
+    // contact form (front-end only)
+    document.getElementById('contactForm').addEventListener('submit', (e)=>{
+      e.preventDefault();
+      // simulate success
+      document.getElementById('formResult').style.display='block';
+      setTimeout(()=>document.getElementById('formResult').style.display='none',4000);
+      e.target.reset();
+    })
+
+    // simple hash-router for single post view (#post=post-id)
+    function showPost(id){
+      const p = POSTS.find(x=>x.id===id);
+      if(!p){ postView.style.display='none'; return }
+      postView.style.display='block';
+      postView.innerHTML = `\n        <div class=\"postpage fade-up\">\n          <a href=\"#home\">← Back</a>\n          <h2>${p.title}</h2>\n          <img class=\"heroimg\" src=\"${p.img}?auto=format&fit=crop&w=1600&q=60\" alt=\"${p.title}\">\n          <p style=\"color:var(--muted)\">${p.excerpt} — a longer article would go here. For your project, expand this with sections: Getting there, Where to stay, Things to do, Costs, Tips and Photo gallery.</p>\n          <h3>Sample itinerary</h3>\n          <ol>\n            <li>Day 1 — Arrival & local market</li>\n            <li>Day 2 — Beach/trek/explore</li>\n            <li>Day 3 — Food crawl & depart</li>\n          </ol>\n        </div>\n      `;
+      // scroll into view
+      postView.scrollIntoView({behavior:'smooth'});
+    }
+
+    function handleHash(){
+      const hash = location.hash || '#home';
+      if(hash.startsWith('#post=')){ const id = hash.split('=')[1]; showPost(id); return }
+      // hide single post view for other sections
+      postView.style.display='none';
+    }
+    window.addEventListener('hashchange', handleHash);
+    handleHash();
+
+    // simple search (client side)
+    document.getElementById('search').addEventListener('input', (e)=>{
+      const q = e.target.value.trim().toLowerCase();
+      if(!q){ renderInitial(); return }
+      const found = POSTS.filter(p=> (p.title+p.excerpt).toLowerCase().includes(q));
+      postsEl.innerHTML='';
+      if(found.length===0){ postsEl.innerHTML='<p style="color:var(--muted)">No posts match your search.</p>' }
+      found.forEach(p=>postsEl.appendChild(createPostCard(p)));
+    })
+
+    // Accessibility: trap focus in modal when open (basic)
+    document.addEventListener('keydown', (e)=>{
+      if(e.key==='Escape') closeModal();
+    })
+
+    // For mobile: show simple nav when screen small
+    function mobileNavToggle(){
+      const nav = document.querySelector('nav.main');
+      const btn = document.getElementById('hambtn');
+      function check(){ if(window.innerWidth<520){ btn.style.display='block'; nav.style.display='none' } else { btn.style.display='none'; nav.style.display='flex' } }
+      btn.addEventListener('click', ()=>{ if(nav.style.display==='none') nav.style.display='flex'; else nav.style.display='none' });
+      window.addEventListener('resize',check); check();
+    }
+    mobileNavToggle();
+
+  </script>
+</body>
+</html>
