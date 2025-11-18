@@ -1,0 +1,100 @@
+<!DOCTYPE html>                                  
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Featured Products</title>
+
+  <style>
+    /* Page background and font */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #1a1a1a;
+      color: white;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+    }
+
+    /* Title and subtitle */
+    h1 {
+      font-size: 30px;
+      margin-bottom: 5px;
+    }
+
+    p {
+      color: #ccc;
+      margin-bottom: 40px;
+    }
+
+    /* Card container */
+    .container {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    /* Each card */
+    .card {
+      width: 200px;
+      height: 300px;
+      border-radius: 15px;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      font-size: 20px;
+      transition: transform 0.3s;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+    }
+
+    /* Different card colors */
+    .wallet { background: linear-gradient(to bottom right, #5b8dfc, #4b6ef5); }
+    .backpack { background: linear-gradient(to bottom right, #ff7eb3, #ff758c); }
+    .sunglasses { background: linear-gradient(to bottom right, #5ee7df, #3cbec9); }
+    .watch { background: linear-gradient(to bottom right, #ff9a8b, #ff6a88); }
+
+    /* Small text below cards */
+    .caption {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #ccc;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Featured Products</h1>
+  <p>Clean, colorful, and fully responsive cards</p>
+
+  <div class="container">
+    <div>
+      <div class="card wallet">Wallet</div>
+      <div class="caption">Leather Wallet</div>
+    </div>
+
+    <div>
+      <div class="card backpack">Backpack</div>
+      <div class="caption">Backpack</div>
+    </div>
+
+    <div>
+      <div class="card sunglasses">Sunglasses</div>
+      <div class="caption">Sunglasses</div>
+    </div>
+
+    <div>
+      <div class="card watch">Watch</div>
+      <div class="caption">Classic Watch</div>
+    </div>
+  </div>
+
+</body>
+</html>
+ 
