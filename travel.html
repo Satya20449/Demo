@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Student Feedback & Evaluation System</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #6366f1; /* Indigo */
+      --accent: #06b6d4;  /* Cyan */
+      --bg: #0f172a;      /* Dark background */
+      --card: rgba(255,255,255,0.08);
+      --muted: #cbd5e1;
+      --success: #22c55e;
+      --radius: 14px;
+      --shadow-glow: 0 0 18px rgba(99,102,241,0.6);
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+
+    /* Reset */
+    *{box-sizing:border-box;margin:0;padding:0}
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(120deg, #0f172a, #1e3a8a, #0f766e);
+      background-size: 300% 300%;
+      animation: gradientFlow 12s ease infinite;
+      padding: 2rem;
+      color: #f8fafc;
+    }
+
+    @keyframes gradientFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 1.2rem;
+      align-items: start;
+    }
+
+    header {
+      grid-column: 1/-1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: #fff;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: glowText 3s infinite alternate;
+    }
+
+    @keyframes glowText {
+      from { text-shadow: 0 0 10px rgba(99,102,241,0.5); }
+      to { text-shadow: 0 0 20px rgba(6,182,212,0.9); }
+    }
+
+    .card {
+      background: var(--card);
+      backdrop-filter: blur(10px);
+      border-radius: var(--radius);
+      padding: 1.2rem;
+      box-shadow: var(--shadow-glow);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 0 25px rgba(6,182,212,0.6);
+    }
+
+    input, textarea, select {
+      width: 100%;
+      border: none;
+      outline: none;
+      border-radius: var(--radius);
+      padding: 0.7rem;
+      font-size: 15px;
+      color: #fff;
+      background: rgba(255,255,255,0.1);
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+    }
+    input:focus, textarea:focus {
+      background: rgba(255,255,255,0.15);
+      box-shadow: 0 0 10px rgba(6,182,212,0.6);
+    }
+
+    label {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    .btn {
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      color: #fff;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    .btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(6,182,212,0.7);
+    }
+
+    .stars {
+      display: flex;
+      gap: 5px;
+    }
+    .star {
+      font-size: 22px;
+      color: #475569;
+      cursor: pointer;
+      transition: transform 0.2s ease, color 0.3s ease;
+    }
+    .star:hover {
+      transform: scale(1.2);
+    }
+    .star[data-active="true"] {
+      color: var(--accent);
+      text-shadow: 0 0 10px rgba(6,182,212,0.8);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) scale(0.8);
+      opacity: 0;
+      background: linear-gradient(135deg, var(--accent), var(--primary));
+      color: #fff;
+      padding: 0.8rem 1.2rem;
+      border-radius: var(--radius);
+      box-shadow: 0 0 15px rgba(6,182,212,0.7);
+      transition: all 0.4s ease;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) scale(1);
+    }
+
+    h2, h3 {
+      font-family: 'Playfair Display', serif;
+      color: #fff;
+    }
+
+    @media (max-width: 900px) {
+      .container { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <div class="logo">Student Feedback & Evaluation</div>
+      <button class="btn" id="exportBtn">Export JSON</button>
+    </header>
+
+    <main>
+      <section class="card">
+        <h2>Submit Feedback</h2>
+        <form id="feedbackForm" style="margin-top:1rem;display:flex;flex-direction:column;gap:1rem">
+          <div>
+            <label for="name">Student Name</label>
+            <input id="name" type="text" placeholder="e.g. Asha Sharma" required>
+          </div>
+          <div>
+            <label for="course">Course / Subject</label>
+            <input id="course" type="text" placeholder="e.g. Web Development">
+          </div>
+          <div>
+            <label>Student Photo (optional)</label>
+            <input id="photo" type="file" accept="image/*">
+            <img id="preview" style="width:70px;height:70px;border-radius:10px;margin-top:0.5rem;object-fit:cover;display:block;">
+          </div>
+
+          <div>
+            <label>Rate the Student (out of 10)</label>
+            <div class="stars" id="starsContainer"></div>
+          </div>
+
+          <div>
+            <label for="comment">Comments / Suggestions</label>
+            <textarea id="comment" rows="3" placeholder="Your helpful comments..."></textarea>
+          </div>
+
+          <button type="submit" class="btn">Submit Feedback</button>
+        </form>
+      </section>
+
+      <section class="card" style="margin-top:1rem">
+        <h3>Latest Feedback</h3>
+        <div id="records" style="margin-top:0.8rem;display:grid;gap:0.6rem;"></div>
+      </section>
+    </main>
+
+    <aside class="card">
+      <h3>Class Summary</h3>
+      <p id="summary" style="margin-top:0.5rem;color:#a5b4fc;">No data yet.</p>
+    </aside>
+  </div>
+
+  <div id="toast" class="toast">🎉 Feedback submitted successfully!</div>
+
+  <script>
+    const DB_KEY = "feedback_advanced_v2";
+    const form = document.getElementById("feedbackForm");
+    const recordsEl = document.getElementById("records");
+    const starsContainer = document.getElementById("starsContainer");
+    const toast = document.getElementById("toast");
+    const preview = document.getElementById("preview");
+    const photo = document.getElementById("photo");
+    const summary = document.getElementById("summary");
+
+    // Create 10 interactive stars
+    for (let i = 1; i <= 10; i++) {
+      const span = document.createElement("span");
+      span.className = "star";
+      span.textContent = "★";
+      span.dataset.value = i;
+      starsContainer.appendChild(span);
+    }
+
+    let currentRating = 0;
+    starsContainer.addEventListener("click", (e) => {
+      if (!e.target.classList.contains("star")) return;
+      currentRating = e.target.dataset.value;
+      updateStars();
+    });
+
+    function updateStars() {
+      document.querySelectorAll(".star").forEach(star => {
+        star.dataset.active = Number(star.dataset.value) <= currentRating;
+      });
+    }
+
+    // Photo preview
+    photo.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => preview.src = reader.result;
+      reader.readAsDataURL(file);
+    });
+
+    function showToast() {
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 3000);
+    }
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const name = document.getElementById("name").value.trim();
+      const course = document.getElementById("course").value.trim();
+      const comment = document.getElementById("comment").value.trim();
+      const photoSrc = preview.src.startsWith("data:") ? preview.src : "";
+
+      if (name === "" || currentRating === 0) {
+        alert("Please enter name and select a rating!");
+        return;
+      }
+
+      const record = { id: Date.now(), name, course, comment, rating: currentRating, photo: photoSrc };
+      const list = JSON.parse(localStorage.getItem(DB_KEY) || "[]");
+      list.unshift(record);
+      localStorage.setItem(DB_KEY, JSON.stringify(list));
+
+      renderRecords(list);
+      updateSummary(list);
+      form.reset();
+      preview.src = "";
+      currentRating = 0;
+      updateStars();
+      showToast();
+    });
+
+    function renderRecords(list) {
+      recordsEl.innerHTML = "";
+      list.slice(0, 5).forEach(r => {
+        const el = document.createElement("div");
+        el.className = "card";
+        el.style.background = "rgba(255,255,255,0.05)";
+        el.innerHTML = `
+          <div style="display:flex;align-items:center;gap:0.8rem;">
+            ${r.photo ? `<img src="${r.photo}" style="width:50px;height:50px;border-radius:8px;object-fit:cover;">` : ""}
+            <div style="flex:1">
+              <strong>${r.name}</strong><br>
+              <small style="color:#a5b4fc">${r.course}</small>
+              <div style="margin-top:0.3rem;font-size:13px;color:#cbd5e1">${r.comment}</div>
+            </div>
+            <div style="font-weight:700;color:var(--accent);font-size:20px;">${r.rating}</div>
+          </div>`;
+        recordsEl.appendChild(el);
+      });
+    }
+
+    function updateSummary(list) {
+      if (!list.length) { summary.textContent = "No data yet."; return; }
+      const avg = list.reduce((a,b)=>a+Number(b.rating),0)/list.length;
+      summary.textContent = `Average Rating: ${avg.toFixed(1)} / 10 (${list.length} students)`;
+    }
+
+    // Load stored data on start
+    window.addEventListener("DOMContentLoaded", ()=>{
+      const list = JSON.parse(localStorage.getItem(DB_KEY) || "[]");
+      renderRecords(list);
+      updateSummary(list);
+    });
+
+    document.getElementById("exportBtn").addEventListener("click", () => {
+      const data = localStorage.getItem(DB_KEY) || "[]";
+      const blob = new Blob([data], {type:"application/json"});
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "feedback.json";
+      a.click();
+    });
+  </script>
+
+</body>
+</html>
